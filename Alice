@@ -1,0 +1,70 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Structure pour le graphe
+#define MAX_NODES 100
+
+typedef struct {
+    int adj[MAX_NODES][MAX_NODES]; // Matrice d'adjacence
+    int nodes;                     // Nombre de sommets
+    char labels[MAX_NODES][20];    // Noms des sommets
+} Graph;
+
+// Fonction pour ajouter un arc au graphe
+void ajouter_arc(Graph *graph, int from, int to) {
+    graph->adj[from][to] = 1; // Ajouter un arc orienté
+}
+
+// Fonction pour trouver les producteurs primaires (sans prédécesseurs)
+void trouver_producteurs_primaires(Graph *graph) {
+    int i, j, has_predecessor;
+
+    printf("Producteurs primaires (sommets sans prédécesseurs) :\n");
+    for (i = 0; i < graph->nodes; i++) {
+        has_predecessor = 0;
+        for (j = 0; j < graph->nodes; j++) {
+            if (graph->adj[j][i] == 1) { // Si un arc existe vers le sommet
+                has_predecessor = 1;
+                break;
+            }
+        }
+        if (!has_predecessor) {
+            printf("- %s\n", graph->labels[i]);
+        }
+    }
+}
+
+int main() {
+    Graph graph;
+    graph.nodes = 8; // Nombre de sommets
+
+    // Ajouter les noms des sommets
+    strcpy(graph.labels[0], "Plantes");
+    strcpy(graph.labels[1], "Insectes");
+    strcpy(graph.labels[2], "Fourmis");
+    strcpy(graph.labels[3], "Grenouilles");
+    strcpy(graph.labels[4], "Paresseux");
+    strcpy(graph.labels[5], "Serpents");
+    strcpy(graph.labels[6], "Harpyes");
+    strcpy(graph.labels[7], "Jaguars");
+
+    // Initialiser la matrice d'adjacence à 0
+    memset(graph.adj, 0, sizeof(graph.adj));
+
+    // Ajouter les arcs selon le graphe donné
+    ajouter_arc(&graph, 0, 1); // Plantes -> Insectes
+    ajouter_arc(&graph, 0, 4); // Plantes -> Paresseux
+    ajouter_arc(&graph, 1, 2); // Insectes -> Fourmis
+    ajouter_arc(&graph, 1, 3); // Insectes -> Grenouilles
+    ajouter_arc(&graph, 2, 3); // Fourmis -> Grenouilles
+    ajouter_arc(&graph, 4, 5); // Paresseux -> Serpents
+    ajouter_arc(&graph, 5, 6); // Serpents -> Harpyes
+    ajouter_arc(&graph, 5, 7); // Serpents -> Jaguars
+
+    // Appeler la fonction pour trouver les producteurs primaires
+    trouver_producteurs_primaires(&graph);
+
+    return 0;
+}
