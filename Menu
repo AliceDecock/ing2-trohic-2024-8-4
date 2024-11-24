@@ -1,0 +1,87 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void afficherMenu() {
+    printf("=== Menu ===\n");
+    printf("1. Afficher les successeurs et predecesseurs des sommets\n");
+    printf("2. Afficher les premiers maillons (sans predecesseurs)\n");
+    printf("3. Afficher les derniers maillons (sans successeurs)\n");
+    printf("4. Afficher les sommets avec une seule source alimentaire\n");
+    printf("5. Verifier si le reseau est fortement connexe\n");
+    printf("6. Calculer la k-connectivite du reseau\n");
+    printf("7. Mesurer la centralite radiale des sommets\n");
+    printf("8. Afficher le reseau avec ses connexions\n");
+    printf("9. Calculer la centralite mediane\n");
+    printf("10. Calculer la densite radiale des sommets\n");
+    printf("11. Afficher les chaines dont un sommet est le dernier maillon\n");
+    printf("12. Calculer la densite de liaison\n");
+    printf("13. Quitter\n");
+}
+
+void executerOption(int choix) {
+    switch (choix) {
+        case 1:
+            printf("Option 1 selectionnee : Afficher les successeurs et predecesseurs des sommets\n");
+            // Appeler une fonction pour effectuer cette action
+            break;
+        case 2:
+            printf("Option 2 selectionnee : Afficher les premiers maillons\n");
+            // Appeler une fonction pour effectuer cette action
+            break;
+        case 3:
+            printf("Option 3 selectionnee : Afficher les derniers maillons\n");
+            // Appeler une fonction pour effectuer cette action
+            break;
+        case 4:
+            printf("Option 4 selectionnee : Afficher les sommets avec une seule source alimentaire\n");
+            break;
+        case 5:
+            printf("Option 5 selectionnee : Verifier si le reseau est fortement connexe\n");
+            break;
+        case 6:
+            printf("Option 6 selectionnee : Calculer la k-connectivite du reseau\n");
+            break;
+        case 7:
+            printf("Option 7 selectionnee : Mesurer la centralite radiale des sommets\n");
+            break;
+        case 8:
+            printf("Option 8 selectionnee : Afficher le reseau avec ses connexions\n");
+            break;
+        case 9:
+            printf("Option 9 selectionnee : Calculer la centralite mediane\n");
+            break;
+        case 10:
+            printf("Option 10 selectionnee : Calculer la densite radiale des sommets\n");
+            break;
+        case 11:
+            printf("Option 11 selectionnee : Afficher les chaines dont un sommet est le dernier maillon\n");
+            break;
+        case 12:
+            printf("Option 12 selectionnee : Calculer la densite de liaison\n");
+            break;
+        case 13:
+            printf("Quitter le programme\n");
+            break;
+        default:
+            printf("Choix invalide. Veuillez reessayer.\n");
+            break;
+    }
+}
+
+int main() {
+    int choix;
+
+    do {
+        afficherMenu();
+        printf("Veuillez choisir une option : ");
+        if (scanf("%d", &choix) != 1) {
+            printf("Entrée invalide. Veuillez entrer un nombre.\n");
+            while (getchar() != '\n'); // Vider le buffer d'entrée
+            continue;
+        }
+        executerOption(choix);
+    } while (choix != 13);
+
+    printf("Programme termine.\n");
+    return 0;
+}
