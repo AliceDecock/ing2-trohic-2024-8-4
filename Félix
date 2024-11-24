@@ -1,0 +1,97 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_SPECIES 100
+#define MAX_NAME_LENGTH 20
+
+// Lire le fichier texte et charger les données
+void read_network(const char *filename, int *n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_SPECIES]) {
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        perror("Erreur lors de l ouverture du fichier ");
+        exit(EXIT_FAILURE);
+    }
+
+    fscanf(file, "%d", n); // Lire le nombre d'espèces
+
+    // Lire les noms des espèces
+    for (int i = 0; i < *n; i++) {
+        fscanf(file, "%s", species[i]);
+    }
+
+    // Lire la matrice d'adjacence
+    for (int i = 0; i < *n; i++) {
+        for (int j = 0; j < *n; j++) {
+            fscanf(file, "%f", &adjacency_matrix[i][j]);
+        }
+    }
+
+    fclose(file);
+}
+
+// Afficher les prédécesseurs et successeurs d'une espèce
+void query_species(int n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_SPECIES]) {
+    char target[MAX_NAME_LENGTH];
+    printf("Entrez le nom de l espece a examiner :\nLion\n"
+           "Hyene\n"
+           "Zebre\n"
+           "Gnou\n"
+           "Herbe\n"
+           "Bacterie ");
+    scanf("%s", target);
+
+    // Trouver l'index de l'espèce
+    int index = -1;
+    for (int i = 0; i < n; i++) {
+        if (strcmp(species[i], target) == 0) {
+            index = i;
+            break;
+        }
+    }
+
+    if (index == -1) {
+        printf("Espece non trouvee.\n");
+        return;
+    }
+
+    // Afficher les successeurs
+    printf("Successeurs (qui sont manges par %s) :\n", target);
+    int has_successors = 0;
+    for (int j = 0; j < n; j++) {
+        if (adjacency_matrix[index][j] > 0) {
+            printf("- %s (ponderation : %.1f)\n", species[j], adjacency_matrix[index][j]);
+            has_successors = 1;
+        }
+    }
+    if (!has_successors) {
+        printf("Aucun.\n");
+    }
+
+    // Afficher les prédécesseurs
+    printf("Predecesseurs (qui mangent %s) :\n", target);
+    int has_predecessors = 0;
+    for (int i = 0; i < n; i++) {
+        if (adjacency_matrix[i][index] > 0) {
+            printf("- %s (ponderation : %.1f)\n", species[i], adjacency_matrix[i][index]);
+            has_predecessors = 1;
+        }
+    }
+    if (!has_predecessors) {
+        printf("Aucun.\n");
+    }
+}
+
+int main() {
+    int n; // Nombre d'espèces
+    char species[MAX_SPECIES][MAX_NAME_LENGTH]; // Noms des espèces
+    float adjacency_matrix[MAX_SPECIES][MAX_SPECIES]; // Matrice d'adjacence
+
+    // Charger le réseau trophique
+    read_network("terrestre.txt", &n, species, adjacency_matrix);
+
+    // Interroger les espèces
+    query_species(n, species, adjacency_matrix);
+
+    return 0;
+}
