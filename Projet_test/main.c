@@ -49,14 +49,14 @@ void display_successors_predecessors(int n, char species[][MAX_NAME_LENGTH], flo
         return;
     }
 
-    printf("Successeurs (qui sont manges par %s) :\n", target);
+    printf("Predecesseurs (qui sont manges par %s) :\n", target);
     for (int j = 0; j < n; j++) {
         if (adjacency_matrix[index][j] > 0) {
             printf("- %s (ponderation : %.1f)\n", species[j], adjacency_matrix[index][j]);
         }
     }
 
-    printf("Predecesseurs (qui mangent %s) :\n", target);
+    printf("Successeurs (qui mangent %s) :\n", target);
     for (int i = 0; i < n; i++) {
         if (adjacency_matrix[i][index] > 0) {
             printf("- %s (ponderation : %.1f)\n", species[i], adjacency_matrix[i][index]);
