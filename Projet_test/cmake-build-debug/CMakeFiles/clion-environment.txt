@@ -1,0 +1,4 @@
+ToolSet: 5.0 (local)@C:\programmes_test\MinGW avec Allegro 4\MinGW
+Options: 
+
+Options:-DCMAKE_MAKE_PROGRAM=C:/Users/wazif/AppData/Local/JetBrains/CLion 2023.2.1/bin/ninja/win/x64/ninja.exe
