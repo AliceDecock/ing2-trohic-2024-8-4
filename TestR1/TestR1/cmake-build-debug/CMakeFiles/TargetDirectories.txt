@@ -1,0 +1,3 @@
+C:/programmes_test/TestR1/TestR1/cmake-build-debug/CMakeFiles/TestR1.dir
+C:/programmes_test/TestR1/TestR1/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/programmes_test/TestR1/TestR1/cmake-build-debug/CMakeFiles/rebuild_cache.dir

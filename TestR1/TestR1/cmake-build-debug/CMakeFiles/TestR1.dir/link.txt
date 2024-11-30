@@ -1,0 +1,3 @@
+"C:\Users\wazif\AppData\Local\JetBrains\CLion 2023.2.1\bin\cmake\win\x64\bin\cmake.exe" -E rm -f CMakeFiles\TestR1.dir/objects.a
+C:\PROGRA~4\MINGWA~1\MinGW\bin\ar.exe qc CMakeFiles\TestR1.dir/objects.a @CMakeFiles\TestR1.dir\objects1.rsp
+C:\PROGRA~4\MINGWA~1\MinGW\bin\gcc.exe -g -Wl,--whole-archive CMakeFiles\TestR1.dir/objects.a -Wl,--no-whole-archive -o TestR1.exe -Wl,--out-implib,libTestR1.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\TestR1.dir\linkLibs.rsp
