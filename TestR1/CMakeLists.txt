@@ -8,5 +8,7 @@ add_executable(TestR1 main.c
         network.h
         connexite.c
         connexite.h
-        population.c
-        population.h)
+        centralite.c
+        centralite.h
+        dynamique.c
+        dynamique.h)

@@ -2,51 +2,34 @@
 #include <stdlib.h>
 #include "network.h"
 #include "connexite.h"
-#include "population.h"
-
-void save_configuration(const char *filename, int n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_SPECIES], PopulationData *pop_data) {
-    FILE *file = fopen(filename, "w");
-    if (!file) {
-        perror("Erreur lors de la sauvegarde");
-        return;
-    }
-    fprintf(file, "%d\n", n);
-    for (int i = 0; i < n; i++) {
-        fprintf(file, "%s %.2f %.2f %.2f\n", species[i], pop_data->populations[i], pop_data->growth_rates[i], pop_data->carrying_capacities[i]);
-    }
-    fclose(file);
-    printf("Configuration sauvegardée avec succès.\n");
-}
-
-void load_configuration(const char *filename, int *n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_SPECIES], PopulationData *pop_data) {
-    FILE *file = fopen(filename, "r");
-    if (!file) {
-        perror("Erreur lors du chargement");
-        return;
-    }
-    fscanf(file, "%d", n);
-    for (int i = 0; i < *n; i++) {
-        fscanf(file, "%s %f %f %f", species[i], &pop_data->populations[i], &pop_data->growth_rates[i], &pop_data->carrying_capacities[i]);
-    }
-    fclose(file);
-    printf("Configuration chargée avec succès.\n");
-}
+#include "centralite.h"
+#include "dynamique.h"
 
 int main() {
-    int n;
-    char species[MAX_SPECIES][MAX_NAME_LENGTH];
-    float adjacency_matrix[MAX_SPECIES][MAX_SPECIES];
-    PopulationData pop_data;
+    int n; // Nombre d'espèces dans le réseau
+    char especes[MAX_ESPECE][MAX_NAME_LENGTH]; // Noms des espèces
+    float matrice_adjacence[MAX_ESPECE][MAX_ESPECE]; // Matrice d'adjacence du réseau
+    float populations[MAX_ESPECE]; // Populations initiales des espèces
+    float growth_rates[MAX_ESPECE]; // Taux de croissance des populations
+    float carrying_capacities[MAX_ESPECE]; // Capacités de portage des espèces
 
+    // Charger un fichier réseau
     char filename[100];
     printf("Veuillez saisir le nom du fichier reseau : ");
     scanf("%s", filename);
 
-    read_network(filename, &n, species, adjacency_matrix, pop_data.populations, pop_data.growth_rates, pop_data.carrying_capacities);
-    initialize_population(n, &pop_data);
+    // Lecture du réseau depuis le fichier
+    read_network(filename, &n, especes, matrice_adjacence, populations, growth_rates, carrying_capacities);
+    printf("Liste des especes chargees :\n");
+    for (int i = 0; i < n; i++) {
+        printf("- %s\n", especes[i]);
+    }
+
+    printf("\nReseau charge avec succes depuis le fichier : %s\n", filename);
 
     int choice;
     do {
+        // Menu principal
         printf("\n=== Menu ===\n");
         printf("1. Afficher la liste des especes\n");
         printf("2. Afficher la liste des arcs\n");
@@ -54,83 +37,98 @@ int main() {
         printf("4. Verifier la connexite\n");
         printf("5. Rechercher des sommets particuliers\n");
         printf("6. Etude des niveaux trophiques et des chaines alimentaires\n");
-        printf("7. Afficher les populations\n");
-        printf("8. Simulation de la dynamique des populations\n");
-        printf("9. Ajuster les parametres des especes\n");
-        printf("10. Sauvegarder la configuration\n");
-        printf("11. Charger une configuration\n");
-        printf("12. Neutraliser une espece\n");
-        printf("13. Quitter\n");
+        printf("7. Calculer la centralite des especes\n");
+        printf("8. Simuler la disparition d'une espece\n");
+        printf("9. Restaurer l'espece supprimee\n");
+        printf("10. Simulation de la dynamique des populations\n");
+        printf("11. Quitter\n");
         printf("Veuillez choisir une option : ");
-
         scanf("%d", &choice);
 
         switch (choice) {
             case 1:
-                display_species(n, species);
+                // Afficher la liste des espèces
+                display_species(n, especes);
                 break;
+
             case 2:
-                display_arcs(n, species, adjacency_matrix);
+                // Afficher la liste des arcs
+                display_arcs(n, especes, matrice_adjacence);
                 break;
+
             case 3:
-                display_successors_predecessors(n, species, adjacency_matrix);
+                // Afficher les successeurs et prédécesseurs
+                display_successors_predecessors(n, especes, matrice_adjacence);
                 break;
+
             case 4:
-                check_connectivity(n, adjacency_matrix);
+                // Vérifier la connexité
+                analyze_connectivity(n, matrice_adjacence);
                 break;
+
             case 5:
-                find_special_vertices(n, species, adjacency_matrix);
+                // Rechercher des sommets particuliers
+                find_special_vertices(n, especes, matrice_adjacence);
                 break;
+
             case 6: {
+                // Étude des niveaux trophiques et des chaînes alimentaires
                 char target_species[MAX_NAME_LENGTH];
                 printf("Entrez le nom de l'espece a etudier : ");
                 scanf("%s", target_species);
-                analyze_trophic_levels(n, species, adjacency_matrix, target_species);
+                analyze_trophic_levels(n, especes, matrice_adjacence, target_species);
                 break;
             }
-            case 7:
-                display_population(n, species, &pop_data);
-                break;
-            case 8: {
-                int iterations;
-                printf("Entrez le nombre d'iterations pour la simulation : ");
-                scanf("%d", &iterations);
-                update_population_dynamics(n, adjacency_matrix, species, &pop_data, iterations);
-                break;
-            }
-            case 9:
-                adjust_parameters(n, species, &pop_data, adjacency_matrix);
-                break;
-            case 10:
-                printf("Nom du fichier de sauvegarde : ");
-                scanf("%s", filename);
-                save_configuration(filename, n, species, adjacency_matrix, &pop_data);
-                break;
-            case 11:
-                printf("Nom du fichier a charger : ");
-                scanf("%s", filename);
-                load_configuration(filename, &n, species, adjacency_matrix, &pop_data);
-                break;
-            case 12: {
-                char target_species[MAX_NAME_LENGTH];
-                printf("Entrez le nom de l'espece a neutraliser : ");
-                scanf("%s", target_species);
+
+            case 7: {
+                // Calculer la centralité des espèces
+                int in_degree[MAX_ESPECE], out_degree[MAX_ESPECE];
+                float centrality[MAX_ESPECE];
+
+                compute_degrees(n, matrice_adjacence, in_degree, out_degree);
+                compute_betweenness_centrality(n, matrice_adjacence, centrality);
+
+                printf("\nCentralite des especes :\n");
                 for (int i = 0; i < n; i++) {
-                    if (strcmp(species[i], target_species) == 0) {
-                        pop_data.populations[i] = 0.0;
-                        printf("Espece %s neutralisee.\n", target_species);
-                        break;
-                    }
+                    printf("%s : demi-degre interieur = %d, demi-degre exterieur = %d, centralite = %.2f\n",
+                           especes[i], in_degree[i], out_degree[i], centrality[i]);
                 }
                 break;
             }
-            case 13:
+
+            case 8: {
+                // Simuler la disparition d'une espèce
+                char target_species[MAX_NAME_LENGTH];
+                printf("Entrez le nom de l'espece a supprimer : ");
+                scanf("%s", target_species);
+                simulate_species_removal(&n, especes, matrice_adjacence, target_species);
+                break;
+            }
+
+            case 9:
+                // Restaurer une espèce supprimée
+                restore_species(&n, especes, matrice_adjacence);
+                break;
+
+            case 10: {
+                // Simulation de la dynamique des populations
+                int iterations;
+                printf("Entrez le nombre d'iterations pour la simulation : ");
+                scanf("%d", &iterations);
+                simulate_population_dynamics(
+                        n, especes, matrice_adjacence, growth_rates, carrying_capacities, populations, iterations);
+                break;
+            }
+
+            case 11:
+                // Quitter le programme
                 printf("Au revoir !\n");
                 break;
+
             default:
                 printf("Option invalide. Veuillez choisir une option valide.\n");
         }
-    } while (choice != 13);
+    } while (choice != 11);
 
     return 0;
 }
