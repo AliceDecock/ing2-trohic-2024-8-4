@@ -79,7 +79,7 @@ void simulate_species_removal(int *n, char species[][MAX_NAME_LENGTH], float adj
 
     (*n)--;
 
-    printf("L'espece %s a été supprimee du reseau.\n", target_species);
+    printf("L'espece %s a ete supprimee du reseau.\n", target_species);
 }
 
 // Calcul des demi-degrés intérieur et extérieur
