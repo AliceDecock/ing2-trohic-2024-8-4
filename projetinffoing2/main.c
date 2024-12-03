@@ -37,7 +37,8 @@ int main() {
         printf("7. Simulation de la dynamique des populations\n");
         printf("8. Calculer la centralite des especes\n");
         printf("9. Simuler la disparition d'une espece\n");
-        printf("10. Quitter\n");
+        printf("10. Restaurer l'espece supprimee\n");
+        printf("11. Quitter\n");
         printf("Veuillez choisir une option : ");
 
 
@@ -95,6 +96,9 @@ int main() {
                 break;
             }
             case 10:
+                restore_species(&n, species, adjacency_matrix);
+                break;
+            case 11:
                 printf("Au revoir !\n");
                 break;
             default:
