@@ -1,0 +1,14 @@
+13
+Algue 12.94 0.12 50.00
+Crevette 0.00 0.20 54.00
+Poisson_chirurgien 0.00 0.30 34.00
+Phytoplancton 12.93 0.13 23.00
+Zooplancton 0.00 0.23 56.00
+Poisson_clown 0.00 0.23 45.00
+Thon 0.00 0.12 32.00
+Serran 0.00 0.18 43.00
+Raie 0.00 0.27 54.00
+Crabe 0.00 0.26 34.00
+Requin 0.00 0.24 34.00
+Murene 0.00 0.12 43.00
+Orque 4.68 0.43 43.00

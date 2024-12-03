@@ -7,4 +7,6 @@ add_executable(TestR1 main.c
         network.c
         network.h
         connexite.c
-        connexite.h)
+        connexite.h
+        population.c
+        population.h)

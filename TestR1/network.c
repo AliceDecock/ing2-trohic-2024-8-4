@@ -1,3 +1,4 @@
+
 //
 // Created by alice on 27/11/2024.
 //
@@ -7,8 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Fonction pour lire le fichier reseau
-void read_network(const char *filename, int *n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_SPECIES]) {
+void read_network(const char *filename, int *n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_SPECIES], float populations[], float growth_rates[], float carrying_capacities[]) {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
         perror("Erreur lors de l'ouverture du fichier");
@@ -16,20 +16,36 @@ void read_network(const char *filename, int *n, char species[][MAX_NAME_LENGTH],
     }
 
     fscanf(file, "%d", n); // Lire le nombre d'especes
+    printf("Nombre d'especes : %d\n", *n);
 
     // Lire les noms des especes
     for (int i = 0; i < *n; i++) {
-        fscanf(file, "%s", species[i]);
+        if (fscanf(file, "%s", species[i]) != 1) {
+            fprintf(stderr, "Erreur lors de la lecture du nom de l'espece %d\n", i);
+            exit(EXIT_FAILURE);
+        }
+        printf("Espece lue : %s\n", species[i]);
     }
 
     // Lire la matrice d'adjacence
     for (int i = 0; i < *n; i++) {
         for (int j = 0; j < *n; j++) {
-            fscanf(file, "%f", &adjacency_matrix[i][j]);
+            if (fscanf(file, "%f", &adjacency_matrix[i][j]) != 1) {
+                fprintf(stderr, "Erreur lors de la lecture de la matrice d'adjacence (%d, %d)\n", i, j);
+                exit(EXIT_FAILURE);
+            }
         }
     }
 
+    // Initialiser les paramètres des populations
+    for (int i = 0; i < *n; i++) {
+        populations[i] = 10.0;           // Population initiale par défaut
+        growth_rates[i] = 0.1;          // Rythme de croissance par défaut
+        carrying_capacities[i] = 100.0; // Capacité de portage par défaut
+    }
+
     fclose(file);
+    printf("Lecture du fichier terminee avec succes.\n");
 }
 
 // Fonction pour afficher la liste des especes
@@ -53,7 +69,8 @@ void display_arcs(int n, char species[][MAX_NAME_LENGTH], float adjacency_matrix
 }
 
 // Fonction pour afficher les successeurs et predecesseurs d'une espece
-void display_successors_predecessors(int n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_SPECIES]) {
+void
+display_successors_predecessors(int n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_SPECIES]) {
     char target[MAX_NAME_LENGTH];
     printf("\nEntrez le nom de l'espece a interroger : ");
     scanf("%s", target);
