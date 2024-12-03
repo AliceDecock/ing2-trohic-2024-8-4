@@ -7,4 +7,6 @@ add_executable(projetinffoing2 main.c
         network.c
         connexite.c
         centralite.h
-        centralite.c)
+        centralite.c
+        dynamique.h
+        dynamique.c)

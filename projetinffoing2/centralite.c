@@ -7,14 +7,14 @@
 // Stock temporaire pour une espèce supprimée
 typedef struct {
     char name[MAX_NAME_LENGTH];
-    float adjacency_row[MAX_SPECIES];
-    float adjacency_col[MAX_SPECIES];
+    float adjacency_row[MAX_ESPECE];
+    float adjacency_col[MAX_ESPECE];
 } RemovedSpecies;
 
 RemovedSpecies removed_species;
 
 // Fonction pour restaurer une espèce supprimée
-void restore_species(int *n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_SPECIES]) {
+void restore_species(int *n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_ESPECE]) {
     if (strlen(removed_species.name) == 0) {
         printf("Aucune espece supprimee à restaurer.\n");
         return;
@@ -39,7 +39,7 @@ void restore_species(int *n, char species[][MAX_NAME_LENGTH], float adjacency_ma
 }
 
 // Mise à jour de la fonction de suppression pour stocker les données
-void simulate_species_removal(int *n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_SPECIES], const char *target_species) {
+void simulate_species_removal(int *n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_ESPECE], const char *target_species) {
     int target_index = -1;
 
     for (int i = 0; i < *n; i++) {
@@ -83,7 +83,7 @@ void simulate_species_removal(int *n, char species[][MAX_NAME_LENGTH], float adj
 }
 
 // Calcul des demi-degrés intérieur et extérieur
-void compute_degrees(int n, float adjacency_matrix[][MAX_SPECIES], int in_degree[], int out_degree[]) {
+void compute_degrees(int n, float adjacency_matrix[][MAX_ESPECE], int in_degree[], int out_degree[]) {
     for (int i = 0; i < n; i++) {
         in_degree[i] = 0;
         out_degree[i] = 0;
@@ -99,14 +99,14 @@ void compute_degrees(int n, float adjacency_matrix[][MAX_SPECIES], int in_degree
 }
 
 // Calcul de la centralité d'intermédiarité
-void compute_betweenness_centrality(int n, float adjacency_matrix[][MAX_SPECIES], float centrality[]) {
+void compute_betweenness_centrality(int n, float adjacency_matrix[][MAX_ESPECE], float centrality[]) {
     for (int i = 0; i < n; i++) {
         centrality[i] = 0.0;
     }
 
     for (int s = 0; s < n; s++) {
-        int visited[MAX_SPECIES] = {0};
-        int queue[MAX_SPECIES];
+        int visited[MAX_ESPECE] = {0};
+        int queue[MAX_ESPECE];
         int front = 0, rear = 0;
 
         queue[rear++] = s;

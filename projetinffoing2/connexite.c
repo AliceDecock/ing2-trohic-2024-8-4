@@ -9,9 +9,9 @@
 #include "connexite.h"
 
 // Fonction pour verifier la connexite du reseau
-void check_connectivity(int n, float adjacency_matrix[][MAX_SPECIES]) {
-    int visited[MAX_SPECIES] = {0};
-    int queue[MAX_SPECIES];
+void check_connectivity(int n, float adjacency_matrix[][MAX_ESPECE]) {
+    int visited[MAX_ESPECE] = {0};
+    int queue[MAX_ESPECE];
     int front = 0, rear = 0;
 
     queue[rear++] = 0;
@@ -43,7 +43,7 @@ void check_connectivity(int n, float adjacency_matrix[][MAX_SPECIES]) {
 }
 
 // Fonction pour rechercher des sommets particuliers
-void find_special_vertices(int n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_SPECIES]) {
+void find_special_vertices(int n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_ESPECE]) {
     printf("Derniers maillons (pas de successeurs) :\n");
     for (int j = 0; j < n; j++) {
         int has_predecessor = 0;
@@ -87,7 +87,7 @@ void find_special_vertices(int n, char species[][MAX_NAME_LENGTH], float adjacen
 }
 
 // Fonction pour analyser les niveaux trophiques et afficher les ascendants
-void print_ascendants(int current_index, int depth, int n, float adjacency_matrix[][MAX_SPECIES], char species[][MAX_NAME_LENGTH], int processed[]) {
+void print_ascendants(int current_index, int depth, int n, float adjacency_matrix[][MAX_ESPECE], char species[][MAX_NAME_LENGTH], int processed[]) {
     for (int i = 0; i < n; i++) {
         if (adjacency_matrix[i][current_index] > 0 && !processed[i]) {
             printf("%*s%s --> %s\n", depth * 4, "", species[i], species[current_index]);
@@ -97,7 +97,7 @@ void print_ascendants(int current_index, int depth, int n, float adjacency_matri
     }
 }
 
-void analyze_trophic_levels(int n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_SPECIES], const char *target_species) {
+void analyze_trophic_levels(int n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_ESPECE], const char *target_species) {
     int target_index = -1;
 
     // Trouver l'index de l'espèce cible
@@ -116,11 +116,11 @@ void analyze_trophic_levels(int n, char species[][MAX_NAME_LENGTH], float adjace
     printf("\nEtude des niveaux trophiques et des chaines alimentaires pour l'espece : %s\n", target_species);
 
     printf("\nGraphe des ascendants :\n");
-    int processed[MAX_SPECIES] = {0};
+    int processed[MAX_ESPECE] = {0};
     print_ascendants(target_index, 0, n, adjacency_matrix, species, processed);
 
     printf("\nNiveaux trophiques :\n");
-    int trophic_levels[MAX_SPECIES] = {0};
+    int trophic_levels[MAX_ESPECE] = {0};
     trophic_levels[target_index] = 1;
 
     for (int level = 1; level <= n; level++) {
@@ -152,42 +152,3 @@ void analyze_trophic_levels(int n, char species[][MAX_NAME_LENGTH], float adjace
     printf("Dans les reseaux trophiques en general, le niveau trophique maximal est limite par la disponibilite de l'energie et sa perte a chaque niveau trophique.\n");
 }
 
-
-// Fonction pour simuler la dynamique des populations
-void simulate_population_dynamics(int n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_SPECIES], float growth_rates[], float carrying_capacities[], float populations[], int iterations) {
-    float new_populations[MAX_SPECIES];
-
-    printf("\nSimulation de la dynamique des populations :\n");
-
-    for (int t = 0; t < iterations; t++) {
-        printf("\nIteration %d:\n", t + 1);
-
-        for (int i = 0; i < n; i++) {
-            float adjusted_capacity = carrying_capacities[i];
-            for (int j = 0; j < n; j++) {
-                if (adjacency_matrix[j][i] > 0) {
-                    adjusted_capacity += adjacency_matrix[j][i] * populations[j];
-                }
-            }
-
-            new_populations[i] = populations[i] + growth_rates[i] * populations[i] * (1 - populations[i] / adjusted_capacity);
-
-            for (int j = 0; j < n; j++) {
-                if (adjacency_matrix[i][j] > 0) {
-                    new_populations[i] -= adjacency_matrix[i][j] * populations[j];
-                }
-            }
-
-            if (new_populations[i] < 0) {
-                new_populations[i] = 0;
-            }
-        }
-
-        for (int i = 0; i < n; i++) {
-            populations[i] = new_populations[i];
-            printf("%s: %.2f\n", species[i], populations[i]);
-        }
-    }
-
-    printf("\nSimulation terminee.\n");
-}

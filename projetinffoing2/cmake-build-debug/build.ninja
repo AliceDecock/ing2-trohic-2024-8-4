@@ -73,6 +73,12 @@ build CMakeFiles/projetinffoing2.dir/centralite.c.obj: C_COMPILER__projetinffoin
   OBJECT_DIR = CMakeFiles\projetinffoing2.dir
   OBJECT_FILE_DIR = CMakeFiles\projetinffoing2.dir
 
+build CMakeFiles/projetinffoing2.dir/dynamique.c.obj: C_COMPILER__projetinffoing2_unscanned_Debug C$:/Users/meili/CLionProjects/projetinffoing2/dynamique.c || cmake_object_order_depends_target_projetinffoing2
+  DEP_FILE = CMakeFiles\projetinffoing2.dir\dynamique.c.obj.d
+  FLAGS = -g -std=gnu2x -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\projetinffoing2.dir
+  OBJECT_FILE_DIR = CMakeFiles\projetinffoing2.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target projetinffoing2
@@ -81,7 +87,7 @@ build CMakeFiles/projetinffoing2.dir/centralite.c.obj: C_COMPILER__projetinffoin
 #############################################
 # Link the executable projetinffoing2.exe
 
-build projetinffoing2.exe: C_EXECUTABLE_LINKER__projetinffoing2_Debug CMakeFiles/projetinffoing2.dir/main.c.obj CMakeFiles/projetinffoing2.dir/network.c.obj CMakeFiles/projetinffoing2.dir/connexite.c.obj CMakeFiles/projetinffoing2.dir/centralite.c.obj
+build projetinffoing2.exe: C_EXECUTABLE_LINKER__projetinffoing2_Debug CMakeFiles/projetinffoing2.dir/main.c.obj CMakeFiles/projetinffoing2.dir/network.c.obj CMakeFiles/projetinffoing2.dir/connexite.c.obj CMakeFiles/projetinffoing2.dir/centralite.c.obj CMakeFiles/projetinffoing2.dir/dynamique.c.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\projetinffoing2.dir

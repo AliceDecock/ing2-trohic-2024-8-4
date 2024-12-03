@@ -1,7 +1,7 @@
 9
 Plante
 Insecte
-paresseux
+Paresseux
 Decomposeurs
 Fourmis
 Grenouille
@@ -17,3 +17,6 @@ Jaguars
 0 0 0.3 0 0 0.7 0 0 0
 0 0 0 0 0 0 0.8 0 0
 0 0 0 0 0 0 0.6 0 0
+200 150 10 500 300 50 20 5 3     // Populations initiales
+0.3 0.25 0.02 0.4 0.35 0.1 0.08 0.03 0.02  // Taux de croissance
+500 400 50 1000 800 100 50 20 15   // Capacités de portage
