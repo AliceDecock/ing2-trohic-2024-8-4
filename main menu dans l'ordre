@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "network.h"
-#include "conexite.h"
+#include "connexite.h"
 
 int main() {
     int n;
