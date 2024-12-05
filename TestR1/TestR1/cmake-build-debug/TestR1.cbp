@@ -82,10 +82,28 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="C:/programmes_test/TestR1/TestR1/centralite.c">
+			<Option target="TestR1"/>
+		</Unit>
+		<Unit filename="C:/programmes_test/TestR1/TestR1/centralite.h">
+			<Option target="TestR1"/>
+		</Unit>
 		<Unit filename="C:/programmes_test/TestR1/TestR1/connexite.c">
 			<Option target="TestR1"/>
 		</Unit>
 		<Unit filename="C:/programmes_test/TestR1/TestR1/connexite.h">
+			<Option target="TestR1"/>
+		</Unit>
+		<Unit filename="C:/programmes_test/TestR1/TestR1/dotgraphe.c">
+			<Option target="TestR1"/>
+		</Unit>
+		<Unit filename="C:/programmes_test/TestR1/TestR1/dotgraphe.h">
+			<Option target="TestR1"/>
+		</Unit>
+		<Unit filename="C:/programmes_test/TestR1/TestR1/dynamique.c">
+			<Option target="TestR1"/>
+		</Unit>
+		<Unit filename="C:/programmes_test/TestR1/TestR1/dynamique.h">
 			<Option target="TestR1"/>
 		</Unit>
 		<Unit filename="C:/programmes_test/TestR1/TestR1/main.c">
@@ -95,6 +113,12 @@
 			<Option target="TestR1"/>
 		</Unit>
 		<Unit filename="C:/programmes_test/TestR1/TestR1/network.h">
+			<Option target="TestR1"/>
+		</Unit>
+		<Unit filename="C:/programmes_test/TestR1/TestR1/population.c">
+			<Option target="TestR1"/>
+		</Unit>
+		<Unit filename="C:/programmes_test/TestR1/TestR1/population.h">
 			<Option target="TestR1"/>
 		</Unit>
 		<Unit filename="C:/programmes_test/TestR1/TestR1/CMakeLists.txt">

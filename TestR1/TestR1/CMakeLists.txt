@@ -7,4 +7,14 @@ add_executable(TestR1 main.c
         network.c
         network.h
         connexite.c
-        connexite.h)
+        connexite.h
+        centralite.c
+        centralite.h
+        dynamique.c
+        dynamique.h
+        dynamique.c
+        dynamique.h
+        dotgraphe.c
+        dotgraphe.h
+        population.c
+        )
