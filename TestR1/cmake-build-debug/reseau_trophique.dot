@@ -6,8 +6,6 @@ digraph trophic_network {
     "Zooplancton" -> "Phytoplancton" [label="0.4", color=blue, penwidth=0.4];
     "Poisson_clown" -> "Crevette" [label="0.2", color=blue, penwidth=0.2];
     "Poisson_clown" -> "Zooplancton" [label="0.3", color=blue, penwidth=0.3];
-    "Thon" -> "Poisson_clown" [label="0.2", color=blue, penwidth=0.2];
-    "Thon" -> "Serran" [label="0.3", color=blue, penwidth=0.3];
     "Serran" -> "Crevette" [label="0.3", color=blue, penwidth=0.3];
     "Serran" -> "Poisson_chirurgien" [label="0.2", color=blue, penwidth=0.2];
     "Serran" -> "Poisson_clown" [label="0.2", color=blue, penwidth=0.2];
@@ -16,10 +14,11 @@ digraph trophic_network {
     "Raie" -> "Crabe" [label="0.3", color=blue, penwidth=0.3];
     "Crabe" -> "Crevette" [label="0.2", color=blue, penwidth=0.2];
     "Crabe" -> "Poisson_chirurgien" [label="0.1", color=blue, penwidth=0.1];
-    "Requin" -> "Thon" [label="0.3", color=blue, penwidth=0.3];
+    "Crabe" -> "Crabe" [label="0.3", color=blue, penwidth=0.3];
     "Requin" -> "Raie" [label="0.3", color=blue, penwidth=0.3];
     "Requin" -> "Murene" [label="0.2", color=blue, penwidth=0.2];
     "Murene" -> "Serran" [label="0.3", color=blue, penwidth=0.3];
     "Murene" -> "Crabe" [label="0.2", color=blue, penwidth=0.2];
+    "Murene" -> "Murene" [label="0.2", color=blue, penwidth=0.2];
     "Orque" -> "Requin" [label="0.3", color=blue, penwidth=0.3];
 }
