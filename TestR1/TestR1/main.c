@@ -47,11 +47,11 @@ int main() {
     read_network(filename, &n, especes, matrice_adjacence, populations, growth_rates, carrying_capacities);
 
     // Affichage des espèces lues
-    printf("Nombre d'especes : %d\n", n);
-    for (int i = 0; i < n; i++) {
-        printf("Espece lue : %s\n", especes[i]);
-    }
-    printf("Lecture du fichier terminee avec succes.\n");
+    //printf("Nombre d'especes : %d\n", n);
+    //for (int i = 0; i < n; i++) {
+    //    printf("Espece lue : %s\n", especes[i]);
+    //}
+    //printf("Lecture du fichier terminee avec succes.\n");
 
     // Génération du fichier DOT
     printf("Generation automatique du fichier DOT...\n");
@@ -81,8 +81,13 @@ int main() {
                 display_successors_predecessors(n, especes, matrice_adjacence);
                 break;
             case 4:
-                printf("Option 4 choisie : Verifier la connexite.\n");
-                analyze_connectivity(n, matrice_adjacence);
+                printf("Option 4 choisie : Vérification de la connexité.\n");
+                Reseau reseau = {
+                        .nb_especes = n,
+                        .nb_relations = 0
+                };
+                memcpy(reseau.especes, especes, sizeof(char) * n * MAX_NAME_LENGTH);
+                verifier_connexite(&reseau);
                 break;
 
             case 5:
@@ -140,6 +145,7 @@ int main() {
             default:
                 printf("Option invalide. Veuillez choisir une option valide.\n");
         }
+
     } while (choice != 11);
 
     return 0;

@@ -1,106 +1,76 @@
 #include "connexite.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-#include "connexite.h"
-#include <stdbool.h>
-#include <string.h>
-#include <stdio.h>
 
-// Fonction auxiliaire : recherche en profondeur (DFS)
-static void dfs(int node, int n, float adjacency_matrix[][MAX_ESPECE], bool visited[]) {
-    visited[node] = true;
-    for (int i = 0; i < n; i++) {
-        if (adjacency_matrix[node][i] > 0 && !visited[i]) {
-            dfs(i, n, adjacency_matrix, visited);
+// Fonction pour trouver l'indice d'une espèce dans le réseau
+int trouver_espece(Reseau *r, const char *espece) {
+    for (int i = 0; i < r->nb_especes; i++) {
+        if (strcmp(r->especes[i], espece) == 0) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+// DFS récursif
+void dfs(Reseau *r, int espece_index, int *visite) {
+    visite[espece_index] = 1;
+
+    for (int i = 0; i < r->nb_relations; i++) {
+        if (strcmp(r->especes[espece_index], r->relations[i].source) == 0) {
+            int dest_index = trouver_espece(r, r->relations[i].destination);
+            if (dest_index != -1 && !visite[dest_index]) {
+                dfs(r, dest_index, visite);
+            }
+        } else if (strcmp(r->especes[espece_index], r->relations[i].destination) == 0) {
+            int src_index = trouver_espece(r, r->relations[i].source);
+            if (src_index != -1 && !visite[src_index]) {
+                dfs(r, src_index, visite);
+            }
         }
     }
 }
 
-// Vérifie si le graphe est connexe
-bool is_connected(int n, float adjacency_matrix[][MAX_ESPECE]) {
-    bool visited[MAX_ESPECE] = {false};
-    dfs(0, n, adjacency_matrix, visited);
+// Vérification et affichage des composantes connexes
+void verifier_connexite(Reseau *r) {
+    printf("\n=== VÉRIFICATION DE LA CONNEXITÉ ===\n");
 
-    for (int i = 0; i < n; i++) {
-        if (!visited[i]) {
-            return false; // Si un sommet n'est pas visité, le graphe n'est pas connexe
-        }
-    }
-    return true;
-}
-
-// Vérifie si le graphe est fortement connexe
-bool is_strongly_connected(int n, float adjacency_matrix[][MAX_ESPECE]) {
-    // Étape 1 : Vérification de connexité avec la matrice normale
-    bool visited[MAX_ESPECE] = {false};
-    dfs(0, n, adjacency_matrix, visited);
-
-    for (int i = 0; i < n; i++) {
-        if (!visited[i]) {
-            return false;
-        }
+    if (r->nb_especes == 0) {
+        printf("Le réseau est vide.\n");
+        return;
     }
 
-    // Étape 2 : Vérification avec la matrice transposée
-    float transposed[MAX_ESPECE][MAX_ESPECE] = {0};
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            transposed[j][i] = adjacency_matrix[i][j];
-        }
-    }
+    int *visite = (int *)calloc(r->nb_especes, sizeof(int));
+    int composantes = 0;
 
-    memset(visited, 0, sizeof(visited));
-    dfs(0, n, transposed, visited);
+    printf("\n--- Composantes connexes ---\n");
+    for (int i = 0; i < r->nb_especes; i++) {
+        if (!visite[i]) {
+            composantes++;
+            printf("Composante %d : ", composantes);
 
-    for (int i = 0; i < n; i++) {
-        if (!visited[i]) {
-            return false;
-        }
-    }
+            // Parcourir et afficher toutes les espèces de cette composante
+            dfs(r, i, visite);
 
-    return true;
-}
-
-// Analyse complète de la connexité
-void analyze_connectivity(int n, float adjacency_matrix[][MAX_ESPECE]) {
-    printf("\n=== Analyse de la Connexité ===\n");
-
-    if (is_connected(n, adjacency_matrix)) {
-        printf("Le réseau est connexe.\n");
-    } else {
-        printf("Le réseau n'est pas connexe.\n");
-    }
-
-    if (is_strongly_connected(n, adjacency_matrix)) {
-        printf("Le réseau est fortement connexe.\n");
-    } else {
-        printf("Le réseau n'est pas fortement connexe.\n");
-    }
-
-    find_connected_components(n, adjacency_matrix);
-}
-
-// Trouve et affiche les composantes connexes
-void find_connected_components(int n, float adjacency_matrix[][MAX_ESPECE]) {
-    bool visited[MAX_ESPECE] = {false};
-    int component[MAX_ESPECE] = {0};
-    int component_count = 0;
-
-    printf("\nComposantes connexes :\n");
-    for (int i = 0; i < n; i++) {
-        if (!visited[i]) {
-            component_count++;
-            dfs(i, n, adjacency_matrix, visited);
-            printf("Composante %d : ", component_count);
-            for (int j = 0; j < n; j++) {
-                if (visited[j] && component[j] == 0) {
-                    printf("%d ", j);
-                    component[j] = component_count;
+            for (int j = 0; j < r->nb_especes; j++) {
+                if (visite[j]) {
+                    printf("%s ", r->especes[j]);
+                    visite[j] = -1; // Marquer comme déjà affiché pour cette composante
                 }
             }
             printf("\n");
         }
     }
+
+    // Vérification si le réseau entier est connexe
+    if (composantes == 1) {
+        printf("\nLe réseau est entièrement connexe. Toutes les espèces sont connectées.\n");
+    } else {
+        printf("\nLe réseau n'est pas entièrement connexe. Il contient %d composantes connexes distinctes.\n", composantes);
+    }
+
+    free(visite);
 }
 
 // Recherche des sommets sans prédécesseurs ou successeurs
@@ -134,6 +104,7 @@ void find_special_vertices(int n, char species[][MAX_NAME_LENGTH], float adjacen
         }
     }
 }
+
 // Analyse des niveaux trophiques pour une espèce donnée
 void analyze_trophic_levels(int n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_ESPECE], const char *target_species) {
     printf("\n=== Analyse des Niveaux Trophiques ===\n");
@@ -169,6 +140,5 @@ void analyze_trophic_levels(int n, char species[][MAX_NAME_LENGTH], float adjace
         }
     }
 
-    // Analyse supplémentaire (si nécessaire)
     printf("Analyse des niveaux trophiques terminée pour %s.\n", target_species);
 }

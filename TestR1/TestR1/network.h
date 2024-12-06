@@ -12,3 +12,7 @@ void display_arcs(int n, char species[][MAX_NAME_LENGTH], float adjacency_matrix
 void display_successors_predecessors(int n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_ESPECE]);
 
 #endif
+
+
+
+

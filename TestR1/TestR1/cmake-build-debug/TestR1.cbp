@@ -115,12 +115,6 @@
 		<Unit filename="C:/programmes_test/TestR1/TestR1/network.h">
 			<Option target="TestR1"/>
 		</Unit>
-		<Unit filename="C:/programmes_test/TestR1/TestR1/population.c">
-			<Option target="TestR1"/>
-		</Unit>
-		<Unit filename="C:/programmes_test/TestR1/TestR1/population.h">
-			<Option target="TestR1"/>
-		</Unit>
 		<Unit filename="C:/programmes_test/TestR1/TestR1/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>

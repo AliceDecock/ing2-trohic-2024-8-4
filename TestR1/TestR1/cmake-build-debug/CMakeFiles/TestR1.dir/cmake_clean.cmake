@@ -11,8 +11,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/TestR1.dir/main.c.obj.d"
   "CMakeFiles/TestR1.dir/network.c.obj"
   "CMakeFiles/TestR1.dir/network.c.obj.d"
-  "CMakeFiles/TestR1.dir/population.c.obj"
-  "CMakeFiles/TestR1.dir/population.c.obj.d"
   "TestR1.exe"
   "TestR1.exe.manifest"
   "TestR1.pdb"
