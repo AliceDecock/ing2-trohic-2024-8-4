@@ -86,7 +86,7 @@ int main() {
             case 6: {
                 printf("\033[32mOption 6 choisie : Etude des niveaux trophiques et des chaines alimentaires.\n\033[0m");
                 char target_species[MAX_NAME_LENGTH];
-                printf("\033[36mEntrez le nom de l'espèce à étudier : \033[0m");
+                printf("\033[36mEntrez le nom de l'espece a etudier : \033[0m");
                 scanf("%s", target_species);
                 analyze_trophic_levels(n, species, adjacency_matrix, target_species);
                 break;
@@ -120,8 +120,9 @@ int main() {
                 break;
             case 10:
                 printf("\033[32mOption 10 choisie : Simulation de la dynamique des populations.\n\033[0m");
-                population_dynamics_menu(n, species, populations, growth_rates, carrying_capacities, anthropic_impact);
+                population_dynamics_menu(n, species, populations, growth_rates, carrying_capacities, anthropic_impact, adjacency_matrix);
                 break;
+
             case 11:
                 printf("\033[31mAu revoir !\n\033[0m");
                 break;
