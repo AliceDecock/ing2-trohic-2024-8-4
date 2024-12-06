@@ -79,6 +79,12 @@ build CMakeFiles/TestR1.dir/dynamique.c.obj: C_COMPILER__TestR1_unscanned_Debug 
   OBJECT_DIR = CMakeFiles\TestR1.dir
   OBJECT_FILE_DIR = CMakeFiles\TestR1.dir
 
+build CMakeFiles/TestR1.dir/dotgraphe.c.obj: C_COMPILER__TestR1_unscanned_Debug C$:/Users/alice/CLionProjects/TestR1/dotgraphe.c || cmake_object_order_depends_target_TestR1
+  DEP_FILE = CMakeFiles\TestR1.dir\dotgraphe.c.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\TestR1.dir
+  OBJECT_FILE_DIR = CMakeFiles\TestR1.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target TestR1
@@ -87,7 +93,7 @@ build CMakeFiles/TestR1.dir/dynamique.c.obj: C_COMPILER__TestR1_unscanned_Debug 
 #############################################
 # Link the executable TestR1.exe
 
-build TestR1.exe: C_EXECUTABLE_LINKER__TestR1_Debug CMakeFiles/TestR1.dir/main.c.obj CMakeFiles/TestR1.dir/network.c.obj CMakeFiles/TestR1.dir/connexite.c.obj CMakeFiles/TestR1.dir/centralite.c.obj CMakeFiles/TestR1.dir/dynamique.c.obj
+build TestR1.exe: C_EXECUTABLE_LINKER__TestR1_Debug CMakeFiles/TestR1.dir/main.c.obj CMakeFiles/TestR1.dir/network.c.obj CMakeFiles/TestR1.dir/connexite.c.obj CMakeFiles/TestR1.dir/centralite.c.obj CMakeFiles/TestR1.dir/dynamique.c.obj CMakeFiles/TestR1.dir/dotgraphe.c.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\TestR1.dir

@@ -11,4 +11,6 @@ add_executable(TestR1 main.c
         centralite.c
         centralite.h
         dynamique.c
-        dynamique.h)
+        dynamique.h
+        dotgraphe.c
+        dotgraphe.h)

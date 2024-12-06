@@ -14,52 +14,67 @@ void read_network(const char *filename, int *n, char species[][MAX_NAME_LENGTH],
         exit(EXIT_FAILURE);
     }
 
-    fscanf(file, "%d", n); // Lire le nombre d'especes
+    // Read the number of species
+    if (fscanf(file, "%d", n) != 1) {
+        fprintf(stderr, "Erreur : impossible de lire le nombre d'especes.\n");
+        fclose(file);
+        exit(EXIT_FAILURE);
+    }
     printf("Nombre d'especes : %d\n", *n);
 
-    // Lire les noms des especes
+    // Read species names
     for (int i = 0; i < *n; i++) {
         if (fscanf(file, "%s", species[i]) != 1) {
-            fprintf(stderr, "Erreur lors de la lecture du nom de l'espece %d\n", i);
+            fprintf(stderr, "Erreur : impossible de lire le nom de l'espece %d.\n", i);
+            fclose(file);
             exit(EXIT_FAILURE);
         }
         printf("Espece lue : %s\n", species[i]);
     }
 
-    // Lire la matrice d'adjacence
+    // Read adjacency matrix
     for (int i = 0; i < *n; i++) {
         for (int j = 0; j < *n; j++) {
             if (fscanf(file, "%f", &adjacency_matrix[i][j]) != 1) {
-                fprintf(stderr, "Erreur lors de la lecture de la matrice d'adjacence (%d, %d)\n", i, j);
+                fprintf(stderr, "Erreur : impossible de lire la matrice d'adjacence (%d, %d).\n", i, j);
+                fclose(file);
                 exit(EXIT_FAILURE);
             }
         }
     }
 
-    // Initialiser les paramètres des populations
+    // Read or initialize populations
+    printf("Lecture des populations initiales...\n");
     for (int i = 0; i < *n; i++) {
-        populations[i] = 10.0;           // Population initiale par défaut
-        growth_rates[i] = 0.1;          // Rythme de croissance par défaut
-        carrying_capacities[i] = 100.0; // Capacité de portage par défaut
-    }
-    // Lire les populations initiales
-    for (int i = 0; i < *n; i++) {
-        fscanf(file, "%f", &populations[i]);
+        if (fscanf(file, "%f", &populations[i]) != 1) {
+            populations[i] = 10.0; // Default value if missing
+        }
+        printf(" - %s : Population = %.2f\n", species[i], populations[i]);
     }
 
-    // Lire les taux de croissance
+    // Read or initialize growth rates
+    printf("Lecture des taux de croissance...\n");
     for (int i = 0; i < *n; i++) {
-        fscanf(file, "%f", &growth_rates[i]);
+        if (fscanf(file, "%f", &growth_rates[i]) != 1) {
+            growth_rates[i] = 0.1; // Default value if missing
+        }
+        printf(" - %s : Taux de croissance = %.2f\n", species[i], growth_rates[i]);
     }
 
-    // Lire les capacités de portage
+    // Read or initialize carrying capacities
+    printf("Lecture des capacites de portage...\n");
     for (int i = 0; i < *n; i++) {
-        fscanf(file, "%f", &carrying_capacities[i]);
+        if (fscanf(file, "%f", &carrying_capacities[i]) != 1) {
+            carrying_capacities[i] = 100.0; // Default value if missing
+        }
+        printf(" - %s : Capacite de portage = %.2f\n", species[i], carrying_capacities[i]);
     }
 
     fclose(file);
     printf("Lecture du fichier terminee avec succes.\n");
 }
+
+
 
 // Fonction pour afficher la liste des especes
 void display_species(int n, char species[][MAX_NAME_LENGTH]) {
