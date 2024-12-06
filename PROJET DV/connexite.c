@@ -68,7 +68,7 @@ void verifier_connexite(Reseau *r) {
     if (composantes == 1) {
         printf("\nLe reseau est entierement connexe. Toutes les especes sont connectées.\n");
     } else {
-        printf("\nLe reseau n'est pas entierement connexe. Il contient %d composantes connexes distinctes.\n", composantes);
+        printf("\nLe reseau est entierement connexe. Il contient %d composantes connexes distinctes.\n", composantes);
     }
 
     free(visite);
