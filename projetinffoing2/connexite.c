@@ -1,154 +1,144 @@
-//
-// Created by meili on 30/11/2024.
-//
-
+#include "connexite.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "network.h"
-#include "connexite.h"
 
-// Fonction pour verifier la connexite du reseau
-void check_connectivity(int n, float adjacency_matrix[][MAX_ESPECE]) {
-    int visited[MAX_ESPECE] = {0};
-    int queue[MAX_ESPECE];
-    int front = 0, rear = 0;
+// Fonction pour trouver l'indice d'une espèce dans le réseau
+int trouver_espece(Reseau *r, const char *espece) {
+    for (int i = 0; i < r->nb_especes; i++) {
+        if (strcmp(r->especes[i], espece) == 0) {
+            return i;
+        }
+    }
+    return -1;
+}
 
-    queue[rear++] = 0;
-    visited[0] = 1;
+// DFS récursif
+void dfs(Reseau *r, int espece_index, int *visite) {
+    visite[espece_index] = 1;
 
-    while (front < rear) {
-        int current = queue[front++];
-        for (int i = 0; i < n; i++) {
-            if (adjacency_matrix[current][i] > 0 && !visited[i]) {
-                visited[i] = 1;
-                queue[rear++] = i;
+    for (int i = 0; i < r->nb_relations; i++) {
+        if (strcmp(r->especes[espece_index], r->relations[i].source) == 0) {
+            int dest_index = trouver_espece(r, r->relations[i].destination);
+            if (dest_index != -1 && !visite[dest_index]) {
+                dfs(r, dest_index, visite);
+            }
+        } else if (strcmp(r->especes[espece_index], r->relations[i].destination) == 0) {
+            int src_index = trouver_espece(r, r->relations[i].source);
+            if (src_index != -1 && !visite[src_index]) {
+                dfs(r, src_index, visite);
             }
         }
     }
+}
 
-    int is_connected = 1;
-    for (int i = 0; i < n; i++) {
-        if (!visited[i]) {
-            is_connected = 0;
-            break;
+// Vérification et affichage des composantes connexes
+void verifier_connexite(Reseau *r) {
+    printf("\n=== VÉRIFICATION DE LA CONNEXITÉ ===\n");
+
+    if (r->nb_especes == 0) {
+        printf("Le réseau est vide.\n");
+        return;
+    }
+
+    int *visite = (int *)calloc(r->nb_especes, sizeof(int));
+    int composantes = 0;
+
+    printf("\n--- Composantes connexes ---\n");
+    for (int i = 0; i < r->nb_especes; i++) {
+        if (!visite[i]) {
+            composantes++;
+            printf("Composante %d : ", composantes);
+
+            // Parcourir et afficher toutes les espèces de cette composante
+            dfs(r, i, visite);
+
+            for (int j = 0; j < r->nb_especes; j++) {
+                if (visite[j]) {
+                    printf("%s ", r->especes[j]);
+                    visite[j] = -1; // Marquer comme déjà affiché pour cette composante
+                }
+            }
+            printf("\n");
         }
     }
 
-    if (is_connected) {
-        printf("Le reseau est connexe.\n");
+    // Vérification si le réseau entier est connexe
+    if (composantes == 1) {
+        printf("\nLe réseau est entièrement connexe. Toutes les espèces sont connectées.\n");
     } else {
-        printf("Le reseau n'est pas connexe. Il peut etre divise en sous-ecosystemes.\n");
+        printf("\nLe réseau n'est pas entièrement connexe. Il contient %d composantes connexes distinctes.\n", composantes);
     }
+
+    free(visite);
 }
 
-// Fonction pour rechercher des sommets particuliers
-void find_special_vertices(int n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_ESPECE]) {
-    printf("Derniers maillons (pas de successeurs) :\n");
-    for (int j = 0; j < n; j++) {
-        int has_predecessor = 0;
-        for (int i = 0; i < n; i++) {
-            if (adjacency_matrix[i][j] > 0) {
-                has_predecessor = 1;
-                break;
-            }
-        }
-        if (!has_predecessor) {
-            printf("- %s\n", species[j]);
-        }
-    }
-
-    printf("\nProducteurs primaires (pas de predecesseurs) :\n");
+// Recherche des sommets sans prédécesseurs ou successeurs
+void sommets_particuliers(int n, char especes[][MAX_NAME_LENGTH], float matrice_adjacence[][MAX_ESPECE]) {
+    printf("\n=== Sommets Particuliers ===\n");
     for (int i = 0; i < n; i++) {
-        int has_successor = 0;
+        bool has_successors = false, has_predecessors = false;
+
+        // Vérifie les successeurs
         for (int j = 0; j < n; j++) {
-            if (adjacency_matrix[i][j] > 0) {
-                has_successor = 1;
+            if (matrice_adjacence[i][j] > 0) {
+                has_successors = true;
                 break;
             }
         }
-        if (!has_successor) {
-            printf("- %s\n", species[i]);
-        }
-    }
 
-    printf("\nEspeces avec une seule source d'alimentation :\n");
-    for (int j = 0; j < n; j++) {
-        int count_predecessors = 0;
-        for (int i = 0; i < n; i++) {
-            if (adjacency_matrix[i][j] > 0) {
-                count_predecessors++;
+        // Vérifie les prédécesseurs
+        for (int j = 0; j < n; j++) {
+            if (matrice_adjacence[j][i] > 0) {
+                has_predecessors = true;
+                break;
             }
         }
-        if (count_predecessors == 1) {
-            printf("- %s\n", species[j]);
+
+        if (!has_successors) {
+            printf("- %s n'a pas de successeurs.\n", especes[i]);
+        }
+
+        if (!has_predecessors) {
+            printf("- %s n'a pas de prédécesseurs.\n", especes[i]);
         }
     }
 }
 
-// Fonction pour analyser les niveaux trophiques et afficher les ascendants
-void print_ascendants(int current_index, int depth, int n, float adjacency_matrix[][MAX_ESPECE], char species[][MAX_NAME_LENGTH], int processed[]) {
-    for (int i = 0; i < n; i++) {
-        if (adjacency_matrix[i][current_index] > 0 && !processed[i]) {
-            printf("%*s%s --> %s\n", depth * 4, "", species[i], species[current_index]);
-            processed[i] = 1;
-            print_ascendants(i, depth + 1, n, adjacency_matrix, species, processed);
-        }
-    }
-}
+// Analyse des niveaux trophiques pour une espèce donnée
+void niveaux_trophiques(int n, char especes[][MAX_NAME_LENGTH], float matrice_adjacence[][MAX_ESPECE], const char *espece_ciblee) {
+    printf("\n=== Analyse des Niveaux Trophiques ===\n");
+    printf("Espèce cible : %s\n", espece_ciblee);
 
-void analyze_trophic_levels(int n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_ESPECE], const char *target_species) {
+    // Trouver l'indice de l'espèce cible
     int target_index = -1;
-
-    // Trouver l'index de l'espèce cible
     for (int i = 0; i < n; i++) {
-        if (strcmp(species[i], target_species) == 0) {
+        if (strcmp(especes[i], espece_ciblee) == 0) {
             target_index = i;
             break;
         }
     }
 
     if (target_index == -1) {
-        printf("Espece non trouvee : %s\n", target_species);
+        printf("Espèce non trouvée : %s\n", espece_ciblee);
         return;
     }
 
-    printf("\nEtude des niveaux trophiques et des chaines alimentaires pour l'espece : %s\n", target_species);
-
-    printf("\nGraphe des ascendants :\n");
-    int processed[MAX_ESPECE] = {0};
-    print_ascendants(target_index, 0, n, adjacency_matrix, species, processed);
-
-    printf("\nNiveaux trophiques :\n");
-    int trophic_levels[MAX_ESPECE] = {0};
-    trophic_levels[target_index] = 1;
-
-    for (int level = 1; level <= n; level++) {
-        int changes = 0;
-        for (int j = 0; j < n; j++) {
-            if (trophic_levels[j] == level) {
-                for (int i = 0; i < n; i++) {
-                    if (adjacency_matrix[i][j] > 0 && trophic_levels[i] == 0) {
-                        trophic_levels[i] = level + 1;
-                        changes = 1;
-                    }
-                }
-            }
-        }
-        if (!changes) break;
-    }
-
-    int max_level = 0;
+    // Afficher les ascendants directs
+    printf("Ascendants directs de %s :\n", espece_ciblee);
     for (int i = 0; i < n; i++) {
-        if (trophic_levels[i] > 0) {
-            printf("Niveau %d: %s\n", trophic_levels[i], species[i]);
-            if (trophic_levels[i] > max_level) {
-                max_level = trophic_levels[i];
-            }
+        if (matrice_adjacence[i][target_index] > 0) {
+            printf("- %s (poids : %.2f)\n", especes[i], matrice_adjacence[i][target_index]);
         }
     }
 
-    printf("\nLe niveau trophique maximal dans le reseau est : %d\n", max_level);
-    printf("Dans les reseaux trophiques en general, le niveau trophique maximal est limite par la disponibilite de l'energie et sa perte a chaque niveau trophique.\n");
-}
+    // Afficher les descendants directs
+    printf("Descendants directs de %s :\n", espece_ciblee);
+    for (int i = 0; i < n; i++) {
+        if (matrice_adjacence[target_index][i] > 0) {
+            printf("- %s (poids : %.2f)\n", especes[i], matrice_adjacence[target_index][i]);
+        }
+    }
 
+    printf("Analyse des niveaux trophiques terminée pour %s.\n", espece_ciblee);
+}

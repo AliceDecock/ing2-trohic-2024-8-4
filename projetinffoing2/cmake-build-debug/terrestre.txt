@@ -5,12 +5,12 @@ Zebre
 Gnou
 Herbe
 Bacterie
-0 0.3 0.5 0.2 0 0
-0.1 0 0.4 0.2 0 0
-0 0 0 0 1.0 0
-0 0 0 0 1.0 0
-0 0 0 0 0 0.5
+0 0.3 0.4 0.3 0 0
+0.2 0 0.3 0.2 0 0
+0 0 0 0 0.7 0
+0 0 0 0 0.8 0
+0 0 0 0 0 0.4
 0 0 0 0 0.5 0
-10 15 50 40 100 1000    // Populations initiales
-0.05 0.04 0.1 0.08 0.3 0.5  // Taux de croissance
-50 60 120 100 500 2000    // Capacités de portage
+100 100 100 100 100 100 //populations initiales
+0.05 0.15 0.2 0.3 2 100 //taux de croissance
+0.02 0.2 5 10 50000 1000000000 //capacité de portage

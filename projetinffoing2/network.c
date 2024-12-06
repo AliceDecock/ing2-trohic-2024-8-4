@@ -2,34 +2,32 @@
 // Created by alice on 27/11/2024.
 //
 
-#include "network.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "network.h"
 
-void read_network(const char *filename, int *n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_ESPECE], float populations[], float growth_rates[], float carrying_capacities[]) {
-    FILE *file = fopen(filename, "r");
-    if (file == NULL) {
+void reseau(const char *nomfichier, int *n, char especes[][MAX_NAME_LENGTH], float matrice_adjacence[][MAX_ESPECE], float populations[], float croissance[], float portage[]) {
+    FILE *fichier = fopen(nomfichier, "r");
+    if (fichier == NULL) {
         perror("Erreur lors de l'ouverture du fichier");
         exit(EXIT_FAILURE);
     }
 
-    fscanf(file, "%d", n); // Lire le nombre d'especes
-    printf("Nombre d'especes : %d\n", *n);
+    fscanf(fichier, "%d", n); // Lire le nombre d'especes
 
     // Lire les noms des especes
     for (int i = 0; i < *n; i++) {
-        if (fscanf(file, "%s", species[i]) != 1) {
+        if (fscanf(fichier, "%s", especes[i]) != 1) {
             fprintf(stderr, "Erreur lors de la lecture du nom de l'espece %d\n", i);
             exit(EXIT_FAILURE);
         }
-        printf("Espece lue : %s\n", species[i]);
     }
 
     // Lire la matrice d'adjacence
     for (int i = 0; i < *n; i++) {
         for (int j = 0; j < *n; j++) {
-            if (fscanf(file, "%f", &adjacency_matrix[i][j]) != 1) {
+            if (fscanf(fichier, "%f", &matrice_adjacence[i][j]) != 1) {
                 fprintf(stderr, "Erreur lors de la lecture de la matrice d'adjacence (%d, %d)\n", i, j);
                 exit(EXIT_FAILURE);
             }
@@ -39,43 +37,43 @@ void read_network(const char *filename, int *n, char species[][MAX_NAME_LENGTH],
     // Initialiser les paramètres des populations
     for (int i = 0; i < *n; i++) {
         populations[i] = 10.0;           // Population initiale par défaut
-        growth_rates[i] = 0.1;          // Rythme de croissance par défaut
-        carrying_capacities[i] = 100.0; // Capacité de portage par défaut
+        croissance[i] = 0.1;          // Rythme de croissance par défaut
+        portage[i] = 100.0; // Capacité de portage par défaut
     }
     // Lire les populations initiales
     for (int i = 0; i < *n; i++) {
-        fscanf(file, "%f", &populations[i]);
+        fscanf(fichier, "%f", &populations[i]);
     }
 
     // Lire les taux de croissance
     for (int i = 0; i < *n; i++) {
-        fscanf(file, "%f", &growth_rates[i]);
+        fscanf(fichier, "%f", &croissance[i]);
     }
 
     // Lire les capacités de portage
     for (int i = 0; i < *n; i++) {
-        fscanf(file, "%f", &carrying_capacities[i]);
+        fscanf(fichier, "%f", &portage[i]);
     }
 
-    fclose(file);
+    fclose(fichier);
     printf("Lecture du fichier terminee avec succes.\n");
 }
 
 // Fonction pour afficher la liste des especes
-void display_species(int n, char species[][MAX_NAME_LENGTH]) {
+void afficher_especes(int n, char especes[][MAX_NAME_LENGTH]) {
     printf("Liste des especes :\n");
     for (int i = 0; i < n; i++) {
-        printf("- %s\n", species[i]);
+        printf("- %s\n", especes[i]);
     }
 }
 
 // Fonction pour afficher la liste des arcs
-void display_arcs(int n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_ESPECE]) {
+void afficher_arcs(int n, char especes[][MAX_NAME_LENGTH], float matrice_adjacence[][MAX_ESPECE]) {
     printf("\nListe des arcs :\n");
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            if (adjacency_matrix[i][j] > 0) {
-                printf("- %s -> %s (Ponderation : %.2f)\n", species[i], species[j], adjacency_matrix[i][j]);
+            if (matrice_adjacence[i][j] > 0) {
+                printf("- %s -> %s (Ponderation : %.2f)\n", especes[i], especes[j], matrice_adjacence[i][j]);
             }
         }
     }
@@ -83,14 +81,14 @@ void display_arcs(int n, char species[][MAX_NAME_LENGTH], float adjacency_matrix
 
 // Fonction pour afficher les successeurs et predecesseurs d'une espece
 void
-display_successors_predecessors(int n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_ESPECE]) {
-    char target[MAX_NAME_LENGTH];
+successeurs_predecesseurs(int n, char especes[][MAX_NAME_LENGTH], float matrice_adjacence[][MAX_ESPECE]) {
+    char cible[MAX_NAME_LENGTH];
     printf("\nEntrez le nom de l'espece a interroger : ");
-    scanf("%s", target);
+    scanf("%s", cible);
 
     int index = -1;
     for (int i = 0; i < n; i++) {
-        if (strcmp(species[i], target) == 0) {
+        if (strcmp(especes[i], cible) == 0) {
             index = i;
             break;
         }
@@ -101,17 +99,17 @@ display_successors_predecessors(int n, char species[][MAX_NAME_LENGTH], float ad
         return;
     }
 
-    printf("Predecesseurs (manges par %s) :\n", target);
+    printf("Predecesseurs (manges par %s) :\n", cible);
     for (int j = 0; j < n; j++) {
-        if (adjacency_matrix[index][j] > 0) {
-            printf("- %s (Ponderation : %.2f)\n", species[j], adjacency_matrix[index][j]);
+        if (matrice_adjacence[index][j] > 0) {
+            printf("- %s (Ponderation : %.2f)\n", especes[j], matrice_adjacence[index][j]);
         }
     }
 
-    printf("Successeurs (qui mangent %s) :\n", target);
+    printf("Successeurs (qui mangent %s) :\n", cible);
     for (int i = 0; i < n; i++) {
-        if (adjacency_matrix[i][index] > 0) {
-            printf("- %s (Ponderation : %.2f)\n", species[i], adjacency_matrix[i][index]);
+        if (matrice_adjacence[i][index] > 0) {
+            printf("- %s (Ponderation : %.2f)\n", especes[i], matrice_adjacence[i][index]);
         }
     }
 }

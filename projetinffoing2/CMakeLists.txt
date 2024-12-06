@@ -9,4 +9,8 @@ add_executable(projetinffoing2 main.c
         centralite.h
         centralite.c
         dynamique.h
-        dynamique.c)
+        dynamique.c
+        dotgraphe.c
+        dotgraphe.h
+        complexite.c
+        complexite.h)

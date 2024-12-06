@@ -1,13 +1,15 @@
-//
-// Created by meili on 03/12/2024.
-//
 #ifndef DYNAMIQUE_H
 #define DYNAMIQUE_H
 
-float compute_adjusted_carrying_capacity(int index, int n, float adjacency_matrix[][MAX_ESPECE], float populations[], float base_capacity);
+#include "network.h"
 
-void simulate_population_dynamics( int n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_ESPECE],
-        float growth_rates[], float carrying_capacities[], float populations[], int iterations);
+// Functions for dynamic population management
+void demarrersimulation(int n, char especes[][MAX_NAME_LENGTH], float populations[], float croissance[], float portage[], float antrophique[], float matrice_adjacence[][MAX_ESPECE], int iterations);
+void pause_simulation();
+void parametresespece(int n, char especes[][MAX_NAME_LENGTH], float croissance[], float portage[]);
+void parametresantrophique(int n, char especes[][MAX_NAME_LENGTH], float antrophique[]);
+void afficher_etat(int n, char especes[][MAX_NAME_LENGTH], float populations[]);
+void sauv_etat(const char *nomfichier, int n, char especes[][MAX_NAME_LENGTH], float populations[], float croissance[], float portage[]);
+void menudynamique(int n, char especes[][MAX_NAME_LENGTH], float populations[], float croissance[], float portage[], float antrophique[], float matrice_adjacence[][MAX_ESPECE]);
 
-#endif
-
+#endif // DYNAMIQUE_H
