@@ -45,7 +45,7 @@ int main() {
     // Affichage des espèces lues
     printf("\033[32mNombre d'especes : %d\n\033[0m", n);
     for (int i = 0; i < n; i++) {
-        printf("\033[32mEspece lue : %s\n\033[0m", species[i]);
+        //printf("\033[32mEspece lue : %s\n\033[0m", species[i]);
     }
     printf("\033[36mLecture du fichier terminee avec succes.\n\033[0m");
 
@@ -53,7 +53,7 @@ int main() {
     // Génération du fichier DOT
     printf("Generation automatique du fichier DOT...\n");
     generate_dot_file(filename, output_dot_file);
-    printf("Fichier DOT genere avec succes : %s\n", output_dot_file);
+    //printf("Fichier DOT genere avec succes : %s\n", output_dot_file);
 
 
     int choice;
