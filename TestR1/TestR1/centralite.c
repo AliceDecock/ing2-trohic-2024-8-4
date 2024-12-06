@@ -1,23 +1,57 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "network.h"
 #include "centralite.h"
+#include "dotgraphe.h"
 
 // Stock temporaire pour une espèce supprimée
 typedef struct {
     char name[MAX_NAME_LENGTH];
     float adjacency_row[MAX_ESPECE];
     float adjacency_col[MAX_ESPECE];
+    int valid; // Indique si une espèce supprimée est stockée
 } RemovedSpecies;
 
-RemovedSpecies removed_species;
+RemovedSpecies removed_species = { .name = "", .valid = 0 };
+
+// Fonction pour écrire l'état actuel du réseau dans un fichier texte
+void write_network_to_file(const char *filename, int n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_ESPECE]) {
+    FILE *file = fopen(filename, "w");
+    if (!file) {
+        perror("Erreur lors de l'ouverture du fichier pour écriture");
+        exit(EXIT_FAILURE);
+    }
+
+    // Écrire le nombre d'espèces
+    fprintf(file, "%d\n", n);
+
+    // Écrire les noms des espèces
+    for (int i = 0; i < n; i++) {
+        fprintf(file, "%s\n", species[i]);
+    }
+
+    // Écrire la matrice d'adjacence
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            fprintf(file, "%.2f ", adjacency_matrix[i][j]);
+        }
+        fprintf(file, "\n");
+    }
+
+    fclose(file);
+    printf("Etat du reseau ecrit dans le fichier : %s\n", filename);
+}
 
 // Fonction pour restaurer une espèce supprimée
 void restore_species(int *n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_ESPECE]) {
-    if (strlen(removed_species.name) == 0) {
+    if (!removed_species.valid) {
         printf("Aucune espece supprimee à restaurer.\n");
+        return;
+    }
+
+    if (*n >= MAX_ESPECE) {
+        printf("Impossible de restaurer l'espece. Limite maximale atteinte.\n");
         return;
     }
 
@@ -33,16 +67,24 @@ void restore_species(int *n, char species[][MAX_NAME_LENGTH], float adjacency_ma
         adjacency_matrix[restored_index][i] = removed_species.adjacency_row[i];
     }
 
-    printf("Espece %s restauree avec succes.\n", removed_species.name);
+    printf("Espece %s restauree avec succès.\n", removed_species.name);
 
     // Réinitialiser le stockage temporaire
-    memset(&removed_species, 0, sizeof(RemovedSpecies));
+    removed_species.valid = 0;
+
+    // Écrire le réseau actuel dans un fichier temporaire
+    write_network_to_file("network_state.txt", *n, species, adjacency_matrix);
+
+    // Regénérer le fichier DOT
+    generate_dot_file("network_state.txt", "reseau_trophique.dot");
+    printf("Fichier DOT regenere apres restauration.\n");
 }
 
-// Mise à jour de la fonction de suppression pour stocker les données
+// Fonction pour supprimer une espèce
 void simulate_species_removal(int *n, char species[][MAX_NAME_LENGTH], float adjacency_matrix[][MAX_ESPECE], const char *target_species) {
     int target_index = -1;
 
+    // Trouver l'index de l'espèce cible
     for (int i = 0; i < *n; i++) {
         if (strcmp(species[i], target_species) == 0) {
             target_index = i;
@@ -55,32 +97,50 @@ void simulate_species_removal(int *n, char species[][MAX_NAME_LENGTH], float adj
         return;
     }
 
+    if (removed_species.valid) {
+        printf("Une espece supprimee existe déjà. Restaurez-la avant de supprimer une nouvelle espece.\n");
+        return;
+    }
+
     // Stocker l'espèce supprimée
     strcpy(removed_species.name, species[target_index]);
     for (int i = 0; i < *n; i++) {
         removed_species.adjacency_row[i] = adjacency_matrix[target_index][i];
         removed_species.adjacency_col[i] = adjacency_matrix[i][target_index];
     }
+    removed_species.valid = 1;
 
     printf("\nSuppression de l'espece : %s\n", target_species);
 
-    // Supprimer l'espèce de la matrice et de la liste
+    // Supprimer les connexions dans la matrice
     for (int i = 0; i < *n; i++) {
         adjacency_matrix[target_index][i] = 0;
         adjacency_matrix[i][target_index] = 0;
     }
 
+    // Supprimer l'espèce de la liste
     for (int i = target_index; i < *n - 1; i++) {
         strcpy(species[i], species[i + 1]);
+    }
+
+    // Réorganiser la matrice d'adjacence pour décaler les lignes et colonnes
+    for (int i = target_index; i < *n - 1; i++) {
         for (int j = 0; j < *n; j++) {
             adjacency_matrix[i][j] = adjacency_matrix[i + 1][j];
-            adjacency_matrix[j][i] = adjacency_matrix[j + 1][i];
+            adjacency_matrix[j][i] = adjacency_matrix[j][i + 1];
         }
     }
 
     (*n)--;
 
     printf("L'espece %s a ete supprimee du reseau.\n", target_species);
+
+    // Écrire le réseau actuel dans un fichier temporaire
+    write_network_to_file("network_state.txt", *n, species, adjacency_matrix);
+
+    // Regénérer le fichier DOT
+    generate_dot_file("network_state.txt", "reseau_trophique.dot");
+    printf("Fichier DOT regenere apres suppression.\n");
 }
 
 // Calcul des demi-degrés intérieur et extérieur

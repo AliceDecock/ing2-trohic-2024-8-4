@@ -13,4 +13,5 @@ CMakeFiles/TestR1.dir/centralite.c.obj: \
  c:\progra~4\mingwa~1\mingw\include\strings.h \
  c:\progra~4\mingwa~1\mingw\include\wchar.h \
  C:\programmes_test\TestR1\TestR1\network.h \
- C:\programmes_test\TestR1\TestR1\centralite.h
+ C:\programmes_test\TestR1\TestR1\centralite.h \
+ C:\programmes_test\TestR1\TestR1\dotgraphe.h

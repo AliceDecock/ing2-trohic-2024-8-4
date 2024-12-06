@@ -1,0 +1,3 @@
+digraph trophic_network {
+    node [style=filled, fillcolor=lightblue, fontcolor=black];
+    edge [color=blue, fontsize=10];
